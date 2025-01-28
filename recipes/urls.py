@@ -1,7 +1,8 @@
 from django.urls import path
-from . views import home # Importando minhas views.py do meu app
+# Da pasta que estou importe views.py
+from . import views 
 
-# dominio/recipes/contato
 urlpatterns = [
-    path('', home), # rota home
+    path('', views.home), # importando minha rota views 
+    path('recipes/<int:id>/', views.recipe), # criando minha url dinamica
 ]
