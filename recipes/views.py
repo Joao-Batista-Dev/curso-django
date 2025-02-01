@@ -17,5 +17,6 @@ def recipe(request, id): # Criando minha views dinâmica
         'recipes/pages/recipe-views.html', # renderizar arquivo HTML
         context={ # passando um contexto para exibir no html = dicionario
             'recipe': make_recipe(), # chamando os dados da minha aplicacao
+            'is_detail_page': True, # Ocuntando minha lista de detalhes
         }
     )
