@@ -4,6 +4,10 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=100) # Campo de Texto
 
+    def __str__(self): # Retorna um texto no Admin
+        return self.name
+    
+
 # Criando minha Tabela para o meu Banco de Dados
 class Recipe(models.Model):
     title = models.CharField(max_length=100) # Campo de Texto
@@ -23,3 +27,7 @@ class Recipe(models.Model):
     # Criando relacao com outra tabela
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.title
+    
