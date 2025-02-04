@@ -1,13 +1,28 @@
 from django.shortcuts import render # Importando o render - renderizar o nossos arquivos HTML
 from django.http import HttpResponse # importando o Protocolo HTTP
 from utils.recipes.factory import make_recipe # Importando pacote de dados FAKER
+from recipes.models import Recipe # Importando o models RECIPE
 
 def home(request):
+    recipes = Recipe.objects.all().order_by('-id') # Pegando os dados do nosso models e ordenando em ordem descrecente
+    
     return render(
         request, 
         'recipes/pages/home.html', # renderizar arquivo HTML
         context={ # passando um contexto para exibir no html = dicionario
-            'recipes': [make_recipe() for _ in range(10)], # chamando os dados da minha aplicacao
+            'recipes': recipes, # Para ixibir os dados para o usuário
+        }
+    )
+
+# Criando a views de categoria
+def category(request, category_id):
+    recipes = Recipe.objects.filter(category__id=category_id).order_by('-id') # Pegando os dados do nosso models e ordenando em ordem descrecente
+    
+    return render(
+        request, 
+        'recipes/pages/home.html', # renderizar arquivo HTML
+        context={ # passando um contexto para exibir no html = dicionario
+            'recipes': recipes, # Para ixibir os dados para o usuário
         }
     )
 

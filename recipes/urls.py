@@ -6,6 +6,7 @@ from . import views
 app_name = "recipes"
 
 urlpatterns = [
-    path('', views.home, name="home"), # importando minha rota views 
+    path('', views.home, name="home"), # importando minha rota views
+    path('recipes/category/<int:category_id>/', views.category, name="category"), # Criando url de categoria
     path('recipes/<int:id>/', views.recipe, name="recipe"), # criando minha url dinamica
 ]
