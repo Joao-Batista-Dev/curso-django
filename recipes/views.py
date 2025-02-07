@@ -4,7 +4,11 @@ from utils.recipes.factory import make_recipe # Importando pacote de dados FAKER
 from recipes.models import Recipe # Importando o models RECIPE
 
 def home(request):
-    recipes = Recipe.objects.all().order_by('-id') # Pegando os dados do nosso models e ordenando em ordem descrecente
+    recipes = Recipe.objects.filter(
+        is_published=True, # Aplicando filtro na minhas publicacao
+        ).order_by(
+            '-id',
+            ) # Pegando os dados do nosso models e ordenando em ordem descrecente
     
     return render(
         request, 
@@ -16,7 +20,12 @@ def home(request):
 
 # Criando a views de categoria
 def category(request, category_id):
-    recipes = Recipe.objects.filter(category__id=category_id).order_by('-id') # Pegando os dados do nosso models e ordenando em ordem descrecente
+    recipes = Recipe.objects.filter(
+        category__id=category_id,
+        is_published = True,  # Aplicando filtro na minhas publicacao
+        ).order_by(
+            '-id',
+            ) # Pegando os dados do nosso models e ordenando em ordem descrecente
     
     return render(
         request, 

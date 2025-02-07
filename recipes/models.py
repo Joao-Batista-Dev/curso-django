@@ -25,8 +25,9 @@ class Recipe(models.Model):
     cover = models.ImageField(upload_to='recipes/cover/%Y/%m/%d/') # campo para pegar Imagem
 
     # Criando relacao com outra tabela
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True,
+        default=None,)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,)
 
     def __str__(self):
         return self.title
