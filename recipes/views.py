@@ -1,8 +1,6 @@
-from django.shortcuts import render, get_list_or_404 # Importando o render - get_list_or_404 para error 
+from django.shortcuts import render, get_list_or_404, get_object_or_404 # Importando o render - get_list_or_404 para error 
 from django.http import HttpResponse # importando o Protocolo HTTP
-from utils.recipes.factory import make_recipe # Importando pacote de dados FAKER
 from .models import Recipe # Importando o models RECIPEencontrar retorna o error 404
-
 
 def home(request):
     recipes = Recipe.objects.filter(
@@ -39,10 +37,11 @@ def category(request, category_id):
     )
 
 def recipe(request, id): # Criando minha views dinâmica
-    recipe = Recipe.objects.filter(
+    recipe = get_object_or_404(
+        Recipe,
         pk=id,
         is_published = True,
-    ).order_by('-id').first()
+    )
 
     return render(
         request, 
