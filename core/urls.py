@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include # impotando o include
+from django.urls import path, include # importando o include
 from django.conf.urls.static import static # Importando arquivos staticos
 from django.conf import settings # Importando arquivos do arquivos settings
  
