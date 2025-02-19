@@ -1,12 +1,15 @@
-from django.test import TestCase
 from django.urls import reverse, resolve
 from recipes import views
-from recipes.models import Recipe, Category, User # Importando minhas tabelas
+from .test_recipe_base import RecipeTestBase
 
-class RecipeViewsTest(TestCase): # Classe de teste da minha views
+
+class RecipeViewsTest(RecipeTestBase): # Classe de teste da minha views
+   
+    # setUP
     def test_recipe_home_view_function_is_correct(self): # verificando a função da minha home
         view = resolve(reverse('recipes:home'))
         self.assertIs(view.func, views.home)
+    # tearDown
 
     def test_recipe_home_views_status_code_200_ok(self):
         response = self.client.get(reverse('recipes:home')) # Usando o cliente do Django - Cliente virtual do django para teste
@@ -25,35 +28,13 @@ class RecipeViewsTest(TestCase): # Classe de teste da minha views
 
     # Teste para retorna nossa views com conteudo
     def test_recipe_home_template_loads_recipes(self):
-        category = Category.objects.create(name='Category') # Criando nossa categoria
-        author = User.objects.create_user( # criando o meu usuario com o usuario do django
-            first_name='fulano',
-            last_name='detal',
-            username='fulano',
-            password='123456',
-            email='fulanodetal@gmail.com',
-        )
-        recipe = Recipe.objects.create( # criando minha receitas
-            category=category,
-            author=author,
-            title='Recipe Title',
-            description='Recipe Description',
-            slug='recipe-slug',
-            preparation_time=10,
-            preparation_time_unit='Minutos',
-            servings=5,
-            servings_unit='Porções',
-            preparation_steps='Recipe Preparation Steps',
-            preparation_steps_is_html=False,
-            is_published=True,
-        )
+        self.make_recipe()
         response = self.client.get(reverse('recipes:home')) # criando minha response
         content = response.content.decode('utf-8') # verifcando o conteudo do content
         response_context_recipes = response.context['recipes'] # Pegando os conteudo da minha recipe
         
         self.assertIn('Recipe Title', content) # Verificar se meu tile está no meu conteudo
-        self.assertEqual(len(response_context_recipes), 1) # verificando a quantidade de receita do meu conteudo
-
+        self.assertEquals(len(response_context_recipes), 1)
     # retorna a verificação se tem pagina - CATEGORIA
     def test_recipe_category_view_function_is_correct(self): # verificando a função da minha categoria
         view = resolve(
