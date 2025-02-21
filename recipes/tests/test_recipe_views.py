@@ -1,6 +1,7 @@
 from django.urls import reverse, resolve
 from recipes import views
 from .test_recipe_base import RecipeTestBase
+from unittest import skip # importando o skip para pular o teste
 
 
 class RecipeViewsTest(RecipeTestBase): # Classe de teste da minha views
@@ -26,15 +27,17 @@ class RecipeViewsTest(RecipeTestBase): # Classe de teste da minha views
             response.content.decode('utf-8')
         ) # verificar se tem um determinado dado na nossa base do html
 
-    # Teste para retorna nossa views com conteudo
-    def test_recipe_home_template_loads_recipes(self):
-        self.make_recipe()
-        response = self.client.get(reverse('recipes:home')) # criando minha response
-        content = response.content.decode('utf-8') # verifcando o conteudo do content
-        response_context_recipes = response.context['recipes'] # Pegando os conteudo da minha recipe
-        
-        self.assertIn('Recipe Title', content) # Verificar se meu tile está no meu conteudo
-        self.assertEquals(len(response_context_recipes), 1)
+        self.fail('Fazendo o teste falhar') # falhando teste
+        needed_title = 'This is a category test'
+        # Need a recipe for this test
+        self.make_recipe(title=needed_title)
+
+        response = self.client.get(reverse('recipes:category', args=(1,)))
+        content = response.content.decode('utf-8')
+
+        # Check if one recipe exists
+        self.assertIn(needed_title, content)
+    
     # retorna a verificação se tem pagina - CATEGORIA
     def test_recipe_category_view_function_is_correct(self): # verificando a função da minha categoria
         view = resolve(
@@ -59,3 +62,34 @@ class RecipeViewsTest(RecipeTestBase): # Classe de teste da minha views
         response = self.client.get(reverse('recipes:recipe', kwargs={'id': 1})) # Usando o cliente do Django - Cliente virtual do django para teste
         self.assertEqual(response.status_code, 404)
     
+    def test_recipe_detail_template_loads_the_correct_recipe(self):
+        needed_title = 'This is a detail page - It load one recipe'
+
+        # Need a recipe for this test
+        self.make_recipe(title=needed_title)
+
+        response = self.client.get(
+            reverse(
+                'recipes:recipe',
+                kwargs={
+                    'id': 1
+                }
+            )
+        )
+        content = response.content.decode('utf-8')
+
+        # Check if one recipe exists
+        self.assertIn(needed_title, content)
+
+    def test_recipe_home_template_dont_load_recipes_not_published(self):
+        """Test recipe is_published False dont show"""
+        # Need a recipe for this test
+        self.make_recipe(is_published=False)
+
+        response = self.client.get(reverse('recipes:home'))
+
+        # Check if one recipe exists
+        self.assertIn(
+            '<h1>No recipes found here 🥲</h1>',
+            response.content.decode('utf-8')
+        )
