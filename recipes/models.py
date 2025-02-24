@@ -12,7 +12,7 @@ class Category(models.Model):
 class Recipe(models.Model):
     title = models.CharField(max_length=100) # Campo de Texto
     description = models.CharField(max_length=200) # Campo de Texto
-    slug = models.SlugField() # Campo pra buscar
+    slug = models.SlugField(unique=True) # Campo para corrigir caracteres especiais
     preparation_time = models.IntegerField() # Campo para Numero
     preparation_time_unit = models.CharField(max_length=100) # Campo de Texto
     servings = models.IntegerField() # Campo para Numero

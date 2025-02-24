@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404 # Importando o render - get_list_or_404 para error 
-from django.http import HttpResponse # importando o Protocolo HTTP
+from django.http import HttpResponse, Http404 # importando o Protocolo HTTP
 from .models import Recipe # Importando o models RECIPEencontrar retorna o error 404
 
 def home(request):
@@ -51,3 +51,11 @@ def recipe(request, id): # Criando minha views dinâmica
             'is_detail_page': True, # Ocuntando minha lista de detalhes
         }
     )
+
+def search(request):
+    search_term = request.GET.get('q')
+
+    if not search_term:
+        raise Http404()
+    
+    return render(request, 'recipes/pages/search.html')
