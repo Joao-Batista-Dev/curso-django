@@ -1,7 +1,12 @@
+import os
 from django.shortcuts import render, get_list_or_404, get_object_or_404 # Importando o render - get_list_or_404 para error 
 from django.http import HttpResponse, Http404 # importando o Protocolo HTTP
 from .models import Recipe # Importando o models RECIPEencontrar retorna o error 404
 from django.db.models import Q
+from django.core.paginator import Paginator # importando o meu pagination
+from utils.pagination import make_pagination
+
+PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
 def home(request):
     recipes = Recipe.objects.filter(
@@ -10,11 +15,14 @@ def home(request):
             '-id',
             ) # Pegando os dados do nosso models e ordenando em ordem descrecente
     
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+
     return render(
         request, 
         'recipes/pages/home.html', # renderizar arquivo HTML
         context={ # passando um contexto para exibir no html = dicionario
-            'recipes': recipes, # Para ixibir os dados para o usuário
+            'recipes': page_obj, # Para ixibir os dados para o usuário
+            'pagination_range': pagination_range
         }
     )
 
@@ -28,11 +36,15 @@ def category(request, category_id):
         ).order_by('-id',), 
     )
 
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+
     return render(
         request, 
         'recipes/pages/home.html', # renderizar arquivo HTML
         context={ # passando um contexto para exibir no html = dicionario
             'recipes': recipes, # Para ixibir os dados para o usuário
+            'recipes': page_obj,
+            'pagination_range': pagination_range,
             'title': f'{recipes[0].category.name} - Category' # Filtrando url pelo name
         }
     )
@@ -65,6 +77,8 @@ def search(request):
         ),
         is_published=True
     ).order_by('-id')
+
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
     
     return render(
         request, 
@@ -72,6 +86,8 @@ def search(request):
         {
             'page_title': f'Search for "{search_term}" |',
             'search_term': search_term,
-            'recipes': recipes,
+            'recipes': page_obj,
+            'pagination_range': pagination_range,
+            'additional_url_query': f'&q={search_term}',
         }
     )
