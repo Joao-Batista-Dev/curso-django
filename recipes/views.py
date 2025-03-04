@@ -5,7 +5,6 @@ from .models import Recipe # Importando o models RECIPEencontrar retorna o error
 from django.db.models import Q
 from django.core.paginator import Paginator # importando o meu pagination
 from utils.pagination import make_pagination
-from django.contrib import messages
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
@@ -15,8 +14,6 @@ def home(request):
         ).order_by(
             '-id',
             ) # Pegando os dados do nosso models e ordenando em ordem descrecente
-    
-    messages.success(request, 'Epa, você foi pesquisar algo que eu vi.')
 
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
