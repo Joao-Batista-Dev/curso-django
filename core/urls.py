@@ -7,7 +7,7 @@ from django.conf import settings # Importando arquivos do arquivos settings
 urlpatterns = [
     path('admin/', admin.site.urls), # rota django admin
     path('', include('recipes.urls')), # include('meu-app.urls.py')
-    # path('recipes/', include('recipes.urls')) # urls dentro de um subdominio
+    path('authors/', include('authors.urls')), # incluindo meu segundo app
 ]
 
 # configurando urls das nossas imagens
