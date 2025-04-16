@@ -1,10 +1,11 @@
 #from django.forms import Form, ModelForm
 from django import forms # import forms
 from django.contrib.auth.models import User # import models Users
+from django.core.exceptions import ValidationError # import ValidationError
 
 # criando forms atrelado ao models existente
 class RegisterForm(forms.ModelForm):
-    # outra forma de sobreescrever campos do formulario
+    # outra forma de sobreescrever campos do formu
     first_name = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={
@@ -60,3 +61,18 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ] 
+
+    # para validar um determinado campo - clean_nome-campo
+    def clean_password(self):
+        # cleaned_data - pegar o dados do formulario ja tratados - já data pegar crue
+        data = self.cleaned_data.get('password')
+
+        # verificao pra verificar determinado dado digitado em campo
+        if 'atenção' in data:
+            raise ValidationError(
+                'Não digite %(value)s no campo password',
+                code='invalid',
+                params={'value': '"atenção"'}
+            )
+
+        return data
