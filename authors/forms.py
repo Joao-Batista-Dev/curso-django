@@ -17,3 +17,19 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ] 
+
+        # sobrescrever um input - inserindo determinado dados
+        widget = {
+            'password': forms.PasswordInput(attrs={
+                'placeholder': 'Digite sua senha corretar'
+            })  
+        }
+        
+        # para excluir um campo do formulario
+        # exclude = ['firts_name']
+
+        # para escrevemos no campos do input
+        # label = { 'username': 'Digite seu usuário' }
+
+        # menssagem de ajudar para o usuário
+        # help_texts = { 'email': 'Digite um Email válido!' }
