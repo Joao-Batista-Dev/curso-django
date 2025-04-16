@@ -4,6 +4,49 @@ from django.contrib.auth.models import User # import models Users
 
 # criando forms atrelado ao models existente
 class RegisterForm(forms.ModelForm):
+    # outra forma de sobreescrever campos do formulario
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ex:. John'
+        }),
+    )
+
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ex:. Doe'
+        }),
+    )
+
+    username = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Your name'
+        }),
+    )
+
+    email = forms.CharField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Your e-mail'
+        }),
+    )
+
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Your password'
+        }),
+    )
+
+    password2 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repeat your password'
+        }),
+    )
+
     # criamos uma meta classe
     # paar passamos meta dados
     class Meta:
@@ -17,19 +60,3 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ] 
-
-        # sobrescrever um input - inserindo determinado dados
-        widget = {
-            'password': forms.PasswordInput(attrs={
-                'placeholder': 'Digite sua senha corretar'
-            })  
-        }
-        
-        # para excluir um campo do formulario
-        # exclude = ['firts_name']
-
-        # para escrevemos no campos do input
-        # label = { 'username': 'Digite seu usuário' }
-
-        # menssagem de ajudar para o usuário
-        # help_texts = { 'email': 'Digite um Email válido!' }
