@@ -76,3 +76,25 @@ class RegisterForm(forms.ModelForm):
             )
 
         return data
+
+    # clean - para validar 2 campos do formulario com o mesmo dados
+    def clean(self):
+        # usando a super class com o metodo clean
+        cleaned_data = super().clean()
+        # pegando os dados do formulario
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        # fazendo verificao de error do formulario
+        if password != password2:
+            # levantando error do formulario
+		    # levantando error e um dicionario para aparecer nos 2 campos
+            raise ValidationError({
+                # expecificando o campo do error - mais seu resultando sera exibido
+                'password': 'password and password2 must be equal!',
+                'password2': 'password and password2 must be equal!'
+            })
+
+
+
+
