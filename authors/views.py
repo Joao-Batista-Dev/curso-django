@@ -3,7 +3,6 @@ from django.http import Http404
 from .forms import RegisterForm # importando meu forms
 from django.contrib import  messages # importando messages para o usuario
 
-
 def register_view(request):
     register_form_data = request.session.get('register_form_data', None)
 

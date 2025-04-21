@@ -40,7 +40,7 @@ class RegisterForm(forms.ModelForm):
     username = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Your name'
+            'placeholder': 'Your username'
         }),
     )
 
@@ -54,7 +54,7 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Your password'
+            'placeholder': 'Type your password'
         }),
         # usando o meu validador de senha com regex
         validators=[strong_password]
