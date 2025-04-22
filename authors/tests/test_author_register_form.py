@@ -1,6 +1,9 @@
-# Importa a classe base de teste do Django. 
-# unittest - mais rapido
+# Importa a classe base de teste do Django.
+# mais rapidos
 from unittest import TestCase
+# Importa a classe base de teste do Django.
+# para usar outros tipos de teste no django
+from django.test import TestCase as DjangoTestCase 
 '''
 Importa o formulário que será testado. 
 Esse formulário está em authors/forms.py.
@@ -25,7 +28,11 @@ Primeira execução: field = 'username', placeholder = 'Your username'
 Segunda execução: field = 'email', placeholder = 'Your e-mail'
 E assim por diante...
 '''
+# importando nossa urls - para o teste de integração
+from django.urls import reverse
 
+
+# classe para Teste Unitarios
 class AuthorRegisterFormUnitTest(TestCase):
     @parameterized.expand([
         ('username', 'Your username'),
@@ -41,4 +48,29 @@ class AuthorRegisterFormUnitTest(TestCase):
         self.assertEqual(current_placeholder, placeholder)  # Verifica se o valor está correto
 
 
+# classe para Teste Integração
+class AuthorRegisterIntergrationTest(DjangoTestCase):
+    def setUp(self, *args, **kwargs):
+        self.form_data = {
+            'username': 'user',
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'email@anuyemail.com',
+            'password': 'Ful@no1',
+            'password2': 'Ful@no1',
+        }
 
+        return super().setUp(*args, **kwargs)
+    
+    # Teste nos campos de fields
+    @parameterized.expand([
+        ('username', 'Your username'),
+    ])
+    # verificar se o campo do formulario esta vazio
+    def test_fields_connot_be_empty(self, field, msg):
+        self.form_data['field'] = '' # dizendo que meu campo e vazio
+        url = reverse('authors:create') # pegando url que eu quero
+        reponse = self.client.post(url, data=self.form_data, follow=True) # enviar os dados necessarios para o nosso formulario
+        self.assertIn(msg, reponse.content.decode('utf-8')) # verifcar se a messagem esta no forms
+
+        
