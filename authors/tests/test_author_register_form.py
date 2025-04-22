@@ -65,6 +65,11 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
     # Teste nos campos de fields
     @parameterized.expand([
         ('username', 'Your username'),
+        ('first_name', 'Ex:. John'),
+        ('last_name', 'Ex:. Doe'),
+        ('email', 'Your e-mail'),
+        ('password', 'Type your password'),
+        ('password2', 'Repeat your password')
     ])
     # verificar se o campo do formulario esta vazio
     def test_fields_connot_be_empty(self, field, msg):
@@ -73,4 +78,6 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
         reponse = self.client.post(url, data=self.form_data, follow=True) # enviar os dados necessarios para o nosso formulario
         self.assertIn(msg, reponse.content.decode('utf-8')) # verifcar se a messagem esta no forms
 
+
+        
         
