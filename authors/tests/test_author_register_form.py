@@ -1,5 +1,6 @@
-# Importa a classe base de teste do Django.
-from django.test import TestCase
+# Importa a classe base de teste do Django. 
+# unittest - mais rapido
+from unittest import TestCase
 '''
 Importa o formulário que será testado. 
 Esse formulário está em authors/forms.py.
@@ -38,3 +39,6 @@ class AuthorRegisterFormUnitTest(TestCase):
         form = RegisterForm()  # Cria uma instância do formulário
         current_placeholder = form[field].field.widget.attrs['placeholder']  # Pega o placeholder do campo
         self.assertEqual(current_placeholder, placeholder)  # Verifica se o valor está correto
+
+
+
