@@ -27,7 +27,9 @@ def register_create(request):
     # validando um formulario no django
     if form.is_valid():
         # salvando dados na base de dados
-        form.save()
+        user = form.save(commit=False)
+        user.set_password(user.password)
+        user.save()
         # messages para usuario
         messages.success(request,'Your user is create, pleace log in.')
         # deletando a chave de um dicionario - para limpar os dados de um formulario
