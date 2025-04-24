@@ -95,6 +95,21 @@ class RegisterForm(forms.ModelForm):
             )
 
         return data
+    
+    # clean - para que tenhamos apenas um email - email unico
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '') # pegando dados do campo do meu email - do formulario
+        exists = User.objects.filter(email=email).exists() # filtrar email na minha base de dados
+
+        # vericar se esta cadastratando um email, ja cadastrado
+        if exists:
+            raise ValidationError(
+                'User e-mail is already in use', 
+                code='invalid',
+            )
+
+        return email
+
 
     # clean - para validar 2 campos do formulario com o mesmo dados
     def clean(self):

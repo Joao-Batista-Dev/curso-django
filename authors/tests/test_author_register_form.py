@@ -117,3 +117,6 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
          response = self.client.post(url, data=self.form_data, follow=True)
  
          self.assertNotIn(msg, response.content.decode('utf-8'))
+
+
+        
