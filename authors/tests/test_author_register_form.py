@@ -74,13 +74,13 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
     # verificar se o campo do formulario esta vazio
     def test_fields_connot_be_empty(self, field, msg):
         self.form_data['field'] = '' # dizendo que meu campo e vazio
-        url = reverse('authors:create') # pegando url que eu quero
+        url = reverse('authors:register_create') # pegando url que eu quero
         reponse = self.client.post(url, data=self.form_data, follow=True) # enviar os dados necessarios para o nosso formulario
         self.assertIn(msg, reponse.content.decode('utf-8')) # verifcar se a messagem esta no forms
 
     def test_password_field_have_lower_upper_case_letters_and_numbers(self):
          self.form_data['password'] = 'abc123'
-         url = reverse('authors:create')
+         url = reverse('authors:register_create')
          response = self.client.post(url, data=self.form_data, follow=True)
  
          msg = (
@@ -93,7 +93,7 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
          self.assertIn(msg, response.content.decode('utf-8'))
  
          self.form_data['password'] = '@A123abc123'
-         url = reverse('authors:create')
+         url = reverse('authors:register_create')
          response = self.client.post(url, data=self.form_data, follow=True)
  
          self.assertNotIn(msg, response.context['form'].errors.get('password'))
@@ -102,7 +102,7 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
          self.form_data['password'] = '@A123abc123'
          self.form_data['password2'] = '@A123abc1235'
  
-         url = reverse('authors:create')
+         url = reverse('authors:register_create')
          response = self.client.post(url, data=self.form_data, follow=True)
  
          msg = 'password and password2 must be equal!'
@@ -113,7 +113,7 @@ class AuthorRegisterIntergrationTest(DjangoTestCase):
          self.form_data['password'] = '@A123abc123'
          self.form_data['password2'] = '@A123abc123'
  
-         url = reverse('authors:create')
+         url = reverse('authors:register_create')
          response = self.client.post(url, data=self.form_data, follow=True)
  
          self.assertNotIn(msg, response.content.decode('utf-8'))
