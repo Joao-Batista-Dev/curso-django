@@ -3,6 +3,8 @@ from django.http import Http404
 from .forms import RegisterForm, LoginForm # importando meu forms
 from django.contrib import  messages # importando messages para o usuario
 from django.urls import reverse
+# para fazer autheticacao do meu formulario - login para logar
+from django.contrib.auth import authenticate, login 
 
 def register_view(request):
     register_form_data = request.session.get('register_form_data', None)
@@ -53,7 +55,42 @@ def login_views(request):
     )
 
 def login_create(request):
-    return render(
-        request,
-        'authors/pages/login.html',
-    )
+    if not request.POST:
+        raise Http404
+    
+    form = LoginForm(request.POST)
+    login_url = reverse('authors:login')
+
+    if form.is_valid():
+        authenticated_user = authenticate(
+            username=form.cleaned_data.get('username', ''), # pegar dados de um formulario
+            password=form.cleaned_data.get('password', ''), # pegar dados de um formulario
+        )
+
+        # veficar se os dado e autenciado
+        if authenticated_user is not None:
+            messages.success(
+                request,
+                'Your are logged in.'
+            )
+
+            login(request, authenticated_user) # para fazer login do usuario
+
+            return redirect(login_url)
+        else:
+            messages.error(
+                request,
+                'Invalid credentials'
+            )
+
+            return redirect(login_url)
+    else:
+        messages.error(
+            request,
+            'Invalid username or password'
+        )
+
+    return redirect(login_url)
+        
+
+
