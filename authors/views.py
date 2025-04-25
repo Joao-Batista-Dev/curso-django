@@ -91,7 +91,6 @@ def login_create(request):
             username=form.cleaned_data.get('username', ''),
             password=form.cleaned_data.get('password', ''), 
         )
-
         '''
         veficar se os dado e autenciado
         '''
@@ -129,6 +128,12 @@ logado pra acesssa determinada pagina
 '''
 @login_required(login_url='authors:login', redirect_field_name='next')
 def logout_views(request):
+    if not request.POST:
+        return redirect(reverse('authors:login'))
+    
+    if request.POST.get('username') != request.user.username:
+        return redirect(reverse('authors:login'))
+
     logout(request)
 
     return redirect(reverse('authors:login'))
