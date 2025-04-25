@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .forms import RegisterForm # importando meu forms
+from .forms import RegisterForm, LoginForm # importando meu forms
 from django.contrib import  messages # importando messages para o usuario
 from django.urls import reverse
 
@@ -41,9 +41,15 @@ def register_create(request):
 
 
 def login_views(request):
+    form = LoginForm()
+
     return render(
         request,
         'authors/pages/login.html',
+        {
+        'form': form,
+        'form_action': reverse('authors:login_create')
+        }
     )
 
 def login_create(request):
