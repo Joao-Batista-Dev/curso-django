@@ -1,7 +1,7 @@
 from pathlib import Path # importando Path - Para pegar raiz do nosso projeto
 from selenium import webdriver # importando a webdriver
 from selenium.webdriver.chrome.service import Service # Importando o Service - precisamos dele
-from time import sleep
+from time import sleep # para o tempo
 
 
 ROOT_PATH = Path(__file__).parent.parent # pegar raiz do projeto - nome da pasta raiz
