@@ -2,6 +2,7 @@ from pathlib import Path # importando Path - Para pegar raiz do nosso projeto
 from selenium import webdriver # importando a webdriver
 from selenium.webdriver.chrome.service import Service # Importando o Service - precisamos dele
 from time import sleep # para o tempo
+import os # importando o os
 
 
 ROOT_PATH = Path(__file__).parent.parent # pegar raiz do projeto - nome da pasta raiz
@@ -18,6 +19,9 @@ def make_chrome_browser(*options):
     if options is not None:
         for option in options:
             chrome_options.add_argument(option) # adicionando argumentos na nossas options
+
+    if os.environ.get('SELENIUM_HEADLESS') == '1':
+        chrome_options.add_argument('--headless')
 
     chrome_service = Service(executable_path=CHROMEDRIVER_PATH) # para passamos onde esta nosso chromedriver
     browser = webdriver.Chrome(service=chrome_service, options=chrome_options) # criando o nosso browser
