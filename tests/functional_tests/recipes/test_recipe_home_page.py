@@ -1,7 +1,10 @@
 from selenium.webdriver.common.by import By # para pegamos dados HTML
 from .base import RecipeBaseFunctionalTest # importando arquivo de teste base
+import pytest # importando o meu pystest - para usar o 'markers'
 
 # classe que herda nossos metodos da classe base - codigos que seriam repetidos
+# marcando meu teste
+@pytest.mark.functionals_test
 class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
     # nosso teste
     def test_recipe_home_page_without_recipes_not_found_message(self): 
