@@ -58,6 +58,17 @@ class RecipeMixins():
             preparation_steps_is_html=preparation_steps_is_html,
             is_published=is_published,
         )
+    
+    def make_recipe_in_batch(self, qtd=10):
+        recipes = []
+
+        for i in range(qtd):
+            kwargs = {'slug': f'r{i}', 'authors_data': {'username': f'u{i}'}}
+            recipe = self.make_recipe(**kwargs)
+            recipes.append(recipe)
+
+        return recipes
+
 
 # minha classe utilizando mais de uma heranca
 class RecipeTestBase(TestCase, RecipeMixins):
