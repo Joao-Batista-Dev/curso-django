@@ -1,9 +1,10 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase # exercutar servido ativo - com css
 from utils.browser import make_chrome_browser # importando nossa configuracao do selenium
 import time
+from recipes.tests.test_recipe_base import RecipeMixins # importando minha classe maxins
 
 # classe base para codigos que seriam repetidos
-class RecipeBaseFunctionalTest(StaticLiveServerTestCase):
+class RecipeBaseFunctionalTest(StaticLiveServerTestCase, RecipeMixins):
     # metodo responsavel - criar o browser
     def setUp(self) -> None:
         self.browser = make_chrome_browser('--headless') # criar o nosso browser - sempre criar um browser

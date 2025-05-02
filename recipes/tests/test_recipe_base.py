@@ -1,10 +1,8 @@
 from django.test import TestCase
 from recipes.models import Recipe, Category, User # Importando minhas tabelas
 
-class RecipeTestBase(TestCase):
-    def setUp(self) -> None: # exercutado antes de todos os teste
-        return super().setUp()
-    
+# criando minha classe mixins
+class RecipeMixins():
     def make_recipe(self, name='Category'):
         return Category.objects.create(name=name) # Criando nossa categoria
     
@@ -60,3 +58,10 @@ class RecipeTestBase(TestCase):
             preparation_steps_is_html=preparation_steps_is_html,
             is_published=is_published,
         )
+
+# minha classe utilizando mais de uma heranca
+class RecipeTestBase(TestCase, RecipeMixins):
+    def setUp(self) -> None: # exercutado antes de todos os teste
+        return super().setUp()
+    
+    

@@ -8,6 +8,8 @@ import pytest # importando o meu pystest - para usar o 'markers'
 class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
     # nosso teste
     def test_recipe_home_page_without_recipes_not_found_message(self): 
+        self.make_recipe() # criando minha receita com minha classe maxins
+
         self.browser.get(self.live_server_url) # pegando a url do nosso webdriver sem saber qual e
 
         self.sleep(6) # pausa o site por um determinado tempo
