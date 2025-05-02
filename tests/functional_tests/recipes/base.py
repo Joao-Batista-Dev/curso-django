@@ -7,7 +7,7 @@ from recipes.tests.test_recipe_base import RecipeMixins # importando minha class
 class RecipeBaseFunctionalTest(StaticLiveServerTestCase, RecipeMixins):
     # metodo responsavel - criar o browser
     def setUp(self) -> None:
-        self.browser = make_chrome_browser('--headless') # criar o nosso browser - sempre criar um browser
+        self.browser = make_chrome_browser() # criar o nosso browser - sempre criar um browser
         return super().setUp()
     
     def tearDown(self) -> None:
