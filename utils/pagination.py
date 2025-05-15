@@ -1,4 +1,5 @@
-import math # import math - aredonda numeros
+import math
+
 from django.core.paginator import Paginator
 
 # python -c
@@ -6,14 +7,15 @@ from django.core.paginator import Paginator
 # sr;print(''.join(sr().choices(s.ascii_letters +
 # s.punctuation, k=64)))"
 
+
 def make_pagination_range(
-        page_range, # criando meu ranger e colocando em uma lista
-        qty_pages, # quantidade de paginas que queremos mostrar
-        current_pages, # para saber em qual pagina estamos
+    page_range,
+    qty_pages,
+    current_page,
 ):
-    middle_range = math.ceil(qty_pages / 2) # aredonda numeros pra cima
-    start_range = current_pages - middle_range
-    stop_range = current_pages + middle_range
+    middle_range = math.ceil(qty_pages / 2)
+    start_range = current_page - middle_range
+    stop_range = current_page + middle_range
     total_pages = len(page_range)
 
     start_range_offset = abs(start_range) if start_range < 0 else 0
@@ -30,13 +32,14 @@ def make_pagination_range(
         'pagination': pagination,
         'page_range': page_range,
         'qty_pages': qty_pages,
-        'current_page': current_pages,
+        'current_page': current_page,
         'total_pages': total_pages,
         'start_range': start_range,
         'stop_range': stop_range,
-        'first_page_out_of_range': current_pages > middle_range,
+        'first_page_out_of_range': current_page > middle_range,
         'last_page_out_of_range': stop_range < total_pages,
     }
+
 
 def make_pagination(request, queryset, per_page, qty_pages=4):
     try:

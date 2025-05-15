@@ -1,15 +1,14 @@
 from django import forms
+from utils.django_forms import add_placeholder
+
 
 class LoginForm(forms.Form):
-    username = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Your username'
-        }),
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_placeholder(self.fields['username'], 'Type your username')
+        add_placeholder(self.fields['password'], 'Type your password')
+
+    username = forms.CharField()
     password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Type your password'
-        }),
+        widget=forms.PasswordInput()
     )

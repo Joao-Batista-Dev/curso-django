@@ -1,119 +1,101 @@
-#from django.forms import Form, ModelForm
-from django import forms # import forms
-from django.contrib.auth.models import User # import models Users
-from django.core.exceptions import ValidationError # import ValidationError
-import re # importando minha regex
-from utils.django_forms import strong_password # importando validacao - Regex
+from django import forms
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from utils.django_forms import add_placeholder, strong_password
 
-# criando forms atrelado ao models existente
+
 class RegisterForm(forms.ModelForm):
-    # outra forma de sobreescrever campos do formu
-    first_name = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Ex:. John'
-        }),
-    )
-
-    last_name = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Ex:. Doe'
-        }),
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_placeholder(self.fields['username'], 'Your username')
+        add_placeholder(self.fields['email'], 'Your e-mail')
+        add_placeholder(self.fields['first_name'], 'Ex.: John')
+        add_placeholder(self.fields['last_name'], 'Ex.: Doe')
+        add_placeholder(self.fields['password'], 'Type your password')
+        add_placeholder(self.fields['password2'], 'Repeat your password')
 
     username = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Your username'
-        }),
+        label='Username',
+        help_text=(
+            'Username must have letters, numbers or one of those @.+-_. '
+            'The length should be between 4 and 150 characters.'
+        ),
+        error_messages={
+            'required': 'This field must not be empty',
+            'min_length': 'Username must have at least 4 characters',
+            'max_length': 'Username must have less than 150 characters',
+        },
+        min_length=4, max_length=150,
     )
-
-    email = forms.CharField(
-        required=True,
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'Your e-mail'
-        }),
+    first_name = forms.CharField(
+        error_messages={'required': 'Write your first name'},
+        label='First name'
     )
-
+    last_name = forms.CharField(
+        error_messages={'required': 'Write your last name'},
+        label='Last name'
+    )
+    email = forms.EmailField(
+        error_messages={'required': 'E-mail is required'},
+        label='E-mail',
+        help_text='The e-mail must be valid.',
+    )
     password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Type your password'
-        }),
-        # usando o meu validador de senha com regex
-        validators=[strong_password]
+        widget=forms.PasswordInput(),
+        error_messages={
+            'required': 'Password must not be empty'
+        },
+        help_text=(
+            'Password must have at least one uppercase letter, '
+            'one lowercase letter and one number. The length should be '
+            'at least 8 characters.'
+        ),
+        validators=[strong_password],
+        label='Password'
     )
-
     password2 = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repeat your password'
-        }),
+        widget=forms.PasswordInput(),
+        label='Password2',
+        error_messages={
+            'required': 'Please, repeat your password'
+        },
     )
 
-    # criamos uma meta classe
-    # paar passamos meta dados
     class Meta:
-        # models que vamos usar
-        model = User 
-        # campos do formulario que queremos
+        model = User
         fields = [
             'first_name',
             'last_name',
             'username',
             'email',
             'password',
-        ] 
+        ]
 
-    # para validar um determinado campo - clean_nome-campo
-    def clean_password(self):
-        # cleaned_data - pegar o dados do formulario ja tratados - já data pegar crue
-        data = self.cleaned_data.get('password')
-
-        # verificao pra verificar determinado dado digitado em campo
-        if 'atenção' in data:
-            raise ValidationError(
-                'Não digite %(value)s no campo password',
-                code='invalid',
-                params={'value': '"atenção"'}
-            )
-
-        return data
-    
-    # clean - para que tenhamos apenas um email - email unico
     def clean_email(self):
-        email = self.cleaned_data.get('email', '') # pegando dados do campo do meu email - do formulario
-        exists = User.objects.filter(email=email).exists() # filtrar email na minha base de dados
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
 
-        # vericar se esta cadastratando um email, ja cadastrado
         if exists:
             raise ValidationError(
-                'User e-mail is already in use', 
-                code='invalid',
+                'User e-mail is already in use', code='invalid',
             )
 
         return email
 
-
-    # clean - para validar 2 campos do formulario com o mesmo dados
     def clean(self):
-        # usando a super class com o metodo clean
         cleaned_data = super().clean()
-        # pegando os dados do formulario
+
         password = cleaned_data.get('password')
         password2 = cleaned_data.get('password2')
 
-        # fazendo verificao de error do formulario
         if password != password2:
-            # levantando error do formulario
-		    # levantando error e um dicionario para aparecer nos 2 campos
+            password_confirmation_error = ValidationError(
+                'Password and password2 must be equal',
+                code='invalid'
+            )
             raise ValidationError({
-                # expecificando o campo do error - mais seu resultando sera exibido
-                'password': 'password and password2 must be equal!',
-                'password2': 'password and password2 must be equal!'
+                'password': password_confirmation_error,
+                'password2': [
+                    password_confirmation_error,
+                ],
             })
-
-
-
-

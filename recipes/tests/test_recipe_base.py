@@ -1,20 +1,20 @@
 from django.test import TestCase
-from recipes.models import Recipe, Category, User # Importando minhas tabelas
+from recipes.models import Category, Recipe, User
 
-# criando minha classe mixins
-class RecipeMixins():
-    def make_recipe(self, name='Category'):
-        return Category.objects.create(name=name) # Criando nossa categoria
-    
+
+class RecipeMixin:
+    def make_category(self, name='Category'):
+        return Category.objects.create(name=name)
+
     def make_author(
-            self,
-            first_name='fulano',
-            last_name='detal',
-            username='fulano',
-            password='123456',
-            email='fulanodetal@gmail.com', 
-        ):
-        return User.objects.create_user( # criando o meu usuario com o usuario do django
+        self,
+        first_name='user',
+        last_name='name',
+        username='username',
+        password='123456',
+        email='username@email.com',
+    ):
+        return User.objects.create_user(
             first_name=first_name,
             last_name=last_name,
             username=username,
@@ -22,31 +22,30 @@ class RecipeMixins():
             email=email,
         )
 
-    def make_category(
-            self, 
-            category_data=None,
-            author_data=None,
-            title='Recipe Title',
-            description='Recipe Description',
-            slug='recipe-slug',
-            preparation_time=10,
-            preparation_time_unit='Minutos',
-            servings=5,
-            servings_unit='Porções',
-            preparation_steps='Recipe Preparation Steps',
-            preparation_steps_is_html=False,
-            is_published=True,
-        ):
-
+    def make_recipe(
+        self,
+        category_data=None,
+        author_data=None,
+        title='Recipe Title',
+        description='Recipe Description',
+        slug='recipe-slug',
+        preparation_time=10,
+        preparation_time_unit='Minutos',
+        servings=5,
+        servings_unit='Porções',
+        preparation_steps='Recipe Preparation Steps',
+        preparation_steps_is_html=False,
+        is_published=True,
+    ):
         if category_data is None:
             category_data = {}
 
-        if author_data is None: 
+        if author_data is None:
             author_data = {}
 
-        return Recipe.objects.create( # criando minha receitas
+        return Recipe.objects.create(
             category=self.make_category(**category_data),
-            author_data=self.make_author(**author_data),
+            author=self.make_author(**author_data),
             title=title,
             description=description,
             slug=slug,
@@ -58,11 +57,10 @@ class RecipeMixins():
             preparation_steps_is_html=preparation_steps_is_html,
             is_published=is_published,
         )
-    
+
     def make_recipe_in_batch(self, qtd=10):
-         recipes = []
-         
-         for i in range(qtd):
+        recipes = []
+        for i in range(qtd):
             kwargs = {
                 'title': f'Recipe Title {i}',
                 'slug': f'r{i}',
@@ -70,13 +68,9 @@ class RecipeMixins():
             }
             recipe = self.make_recipe(**kwargs)
             recipes.append(recipe)
-            
-         return recipes
-    
+        return recipes
 
-# minha classe utilizando mais de uma heranca
-class RecipeTestBase(TestCase, RecipeMixins):
-    def setUp(self) -> None: # exercutado antes de todos os teste
+
+class RecipeTestBase(TestCase, RecipeMixin):
+    def setUp(self) -> None:
         return super().setUp()
-    
-    
