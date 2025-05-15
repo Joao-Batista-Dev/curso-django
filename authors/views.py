@@ -119,7 +119,7 @@ def login_create(request):
             'Invalid username or password'
         )
 
-    return redirect(login_url)
+    return redirect(reverse('authors:dashboard'))
 
 '''
 logout - usuario logado no sistema
@@ -137,3 +137,10 @@ def logout_views(request):
     logout(request)
 
     return redirect(reverse('authors:login'))
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard(request):
+    return render(
+        request,
+        'authors/pages/dashboard.html'
+    )
