@@ -3,7 +3,7 @@ from recipes.models import Recipe
 from utils.django_forms import add_attr
 from collections import defaultdict
 from django.core.exceptions import ValidationError
-from utils.strings import is_positive_number
+from authors.utils.strings import is_positive_number
 
 class AuthorRecipeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

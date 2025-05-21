@@ -7,22 +7,23 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 class DashboardRecipe(View):
-    def get_recipe(self, request, id):
+    def get_recipe(self, request, id=None):
         recipe = None
 
-        recipe = Recipe.objects.filter(
-            is_published=False,
-            author=request.user,
-            pk=id
-        ).first()
+        if id is not None:
+            recipe = Recipe.objects.filter(
+                is_published=False,
+                author=request.user,
+                pk=id
+            ).first()
 
-        if not recipe:
-            raise Http404()
+            if not recipe:
+                raise Http404()
         
         return recipe
 
 
-    def get(self, id):
+    def get(self, id=None):
         recipe = self.get_recipe(id)
 
         form = AuthorRecipeForm(instance=recipe) 
@@ -30,17 +31,7 @@ class DashboardRecipe(View):
         return self.render_recipe(form)
     
 
-    def render_recipe(self, form):
-        return render(
-            self.request, 
-            'authors/pages/dashboard_recipe.html',
-            {
-                'form':form
-            }
-        )
-        
-
-    def post(self, request, id):
+    def post(self, request, id=None):
         recipe = self.get_recipe(id)
 
         form = AuthorRecipeForm(
@@ -63,9 +54,20 @@ class DashboardRecipe(View):
                 'Sua receita foi salva com sucesso!'
             )
 
-            return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
+            return redirect(reverse('authors:dashboard_recipe_edit', args=(recipe.id,)))
 
         return self.render_recipe(form)
+
+
+    def render_recipe(self, form):
+        return render(
+            self.request, 
+            'authors/pages/dashboard_recipe.html',
+            {
+                'form':form
+            }
+        )
+        
 
 
 
