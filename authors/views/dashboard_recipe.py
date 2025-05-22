@@ -70,7 +70,19 @@ class DashboardRecipe(View):
                 'form':form
             }
         )
-        
+      
 
+@method_decorator(login_required(login_url='authors:login', redirect_field_name='next'), name='dispatch')
+class DashboardRecipeDelete(DashboardRecipe):
+    def post(self, *args, **kwargs):
+        recipe = self.get_recipe(self.request.POST.get('id'))
 
+        recipe.delete()
+
+        messages.success(
+            self.request,
+            'Deleted Sucessfully.'
+        )
+
+        return redirect(reverse('authors:dashboard'))
 
