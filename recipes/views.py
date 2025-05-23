@@ -40,21 +40,24 @@ class RecipeListViewsBase(ListView):
         })
 
         return ctx
-        
-    
 
-def home(request):
-    recipes = Recipe.objects.filter(
-        is_published=True,
-    ).order_by('-id')
+class RecipeListViewsHome(RecipeListViewsBase):
+    template_name = 'recipes/pages/home.html'
 
-    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
-    return render(request, 'recipes/pages/home.html', context={
-        'recipes': page_obj,
-        'pagination_range': pagination_range
-    })
+class RecipeListViewsCategory(RecipeListViewsBase):
+    ordering = ('-id')
+    template_name = 'recipes/pages/category.html'
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+
+        qs = qs.filter(
+            category__id=self.kwargs.get('category_id'),
+            is_published=True,
+        )
+
+        return qs
 
 def category(request, category_id):
     recipes = get_list_or_404(
