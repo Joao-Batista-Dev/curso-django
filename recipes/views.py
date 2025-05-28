@@ -2,12 +2,12 @@ import os
 
 from django.db.models import Q
 from django.http.response import Http404
-from django.shortcuts import get_object_or_404, render
 from utils.pagination import make_pagination
 from recipes.models import Recipe
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
+
 
 class RecipeListViewsBase(ListView):
     model = Recipe
@@ -40,6 +40,7 @@ class RecipeListViewsBase(ListView):
         })
 
         return ctx
+    
 
 class RecipeListViewsHome(RecipeListViewsBase):
     template_name = 'recipes/pages/home.html'
@@ -72,6 +73,7 @@ class RecipeListViewsCategory(RecipeListViewsBase):
         })
 
         return ctx
+    
     
 class RecipeListViewsSearch(RecipeListViewsBase):
     template_name = 'recipes/pages/category.html'
@@ -107,11 +109,17 @@ class RecipeListViewsSearch(RecipeListViewsBase):
 
         return ctx
 
+    
+class RecipeDetail(DetailView):
+    model = Recipe
+    context_object_name = 'recipe'
+    template_name = 'recipes/pages/recipe-view.html'
 
-def recipe(request, id):
-    recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
+    def get_context_data(self, *args, **kwargs):
+       ctx = super().get_context_data(*args, **kwargs)
 
-    return render(request, 'recipes/pages/recipe-view.html', context={
-        'recipe': recipe,
-        'is_detail_page': True,
-    })
+       ctx.update({
+           'is_detail_page': True,
+       })
+
+       return ctx
