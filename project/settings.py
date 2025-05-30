@@ -40,9 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # A gente tem apps também
     'recipes',
     'authors',
+
+    # django debug toolbar
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
@@ -53,6 +57,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # django debug toolbar
+    "debug_toolbar.middleware.DebugToolbarMiddleware"
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -148,3 +156,8 @@ MESSAGE_TAGS = {
     constants.SUCCESS: 'message-success',
     constants.WARNING: 'message-warning',
 }
+
+# Django Debug Toolbar IP
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
