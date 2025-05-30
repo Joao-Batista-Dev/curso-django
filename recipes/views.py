@@ -5,6 +5,7 @@ from django.http.response import Http404
 from utils.pagination import make_pagination
 from recipes.models import Recipe
 from django.views.generic import ListView, DetailView
+from django.http import JsonResponse # importando o JsonResponse
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
@@ -45,6 +46,20 @@ class RecipeListViewsBase(ListView):
 class RecipeListViewsHome(RecipeListViewsBase):
     template_name = 'recipes/pages/home.html'
 
+
+class RecipeListViewsHomeApi(RecipeListViewsBase):
+    template_name = 'recipes/pages/home.html'
+
+    def render_to_response(self, context, **response_kwargs):
+        recipes = self.get_context_data()['recipes']
+
+        recipes_list = recipes.object_list.values()
+
+        return JsonResponse(
+            list(recipes_list),
+            safe=False
+        )
+        
 
 class RecipeListViewsCategory(RecipeListViewsBase):
     ordering = ('-id')
