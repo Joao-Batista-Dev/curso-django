@@ -11,5 +11,6 @@ urlpatterns = [
     path('recipes/<int:pk>/', views.RecipeDetail.as_view(), name="recipe"),
     path('recipes/api/v1/', views.RecipeListViewsHomeApi.as_view(), name="recipe_api_v1"),
     path('recipes/api/v1/<int:pk>/', views.RecipeDetailApi.as_view(), name="recipe_api_v1_datail"),
+    path('recipes/theory/', views.theory, name="theory"),
 ] + debug_toolbar_urls()
 
