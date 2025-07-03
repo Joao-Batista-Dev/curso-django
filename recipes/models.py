@@ -76,6 +76,8 @@ class Recipe(models.Model):
         if not self.slug:
             slug = f'{slugify(self.title)}'
             self.slug = slug
+        
+        saved = super().save(*args, **kwargs)
 
         if self.cover:
             try:
@@ -84,4 +86,4 @@ class Recipe(models.Model):
                 ...
             
 
-        return super().save(*args, **kwargs)
+        return saved
